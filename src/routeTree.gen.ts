@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShipmentsRouteImport } from './routes/shipments'
 import { Route as PalletsRouteImport } from './routes/pallets'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportsIndexRouteImport } from './routes/reports.index'
@@ -25,6 +26,11 @@ const ShipmentsRoute = ShipmentsRouteImport.update({
 const PalletsRoute = PalletsRouteImport.update({
   id: '/pallets',
   path: '/pallets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InventoryRoute = InventoryRouteImport.update({
@@ -56,6 +62,7 @@ const ReportsContainerIdRoute = ReportsContainerIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/inventory': typeof InventoryRoute
+  '/login': typeof LoginRoute
   '/pallets': typeof PalletsRoute
   '/shipments': typeof ShipmentsRoute
   '/reports/': typeof ReportsIndexRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/inventory': typeof InventoryRoute
+  '/login': typeof LoginRoute
   '/pallets': typeof PalletsRoute
   '/shipments': typeof ShipmentsRoute
   '/reports': typeof ReportsIndexRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/inventory': typeof InventoryRoute
+  '/login': typeof LoginRoute
   '/pallets': typeof PalletsRoute
   '/shipments': typeof ShipmentsRoute
   '/reports/': typeof ReportsIndexRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/inventory'
+    | '/login'
     | '/pallets'
     | '/shipments'
     | '/reports/'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/inventory'
+    | '/login'
     | '/pallets'
     | '/shipments'
     | '/reports'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/inventory'
+    | '/login'
     | '/pallets'
     | '/shipments'
     | '/reports/'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   InventoryRoute: typeof InventoryRoute
+  LoginRoute: typeof LoginRoute
   PalletsRoute: typeof PalletsRoute
   ShipmentsRoute: typeof ShipmentsRoute
   ReportsIndexRoute: typeof ReportsIndexRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/pallets'
       fullPath: '/pallets'
       preLoaderRoute: typeof PalletsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inventory': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   InventoryRoute: InventoryRoute,
+  LoginRoute: LoginRoute,
   PalletsRoute: PalletsRoute,
   ShipmentsRoute: ShipmentsRoute,
   ReportsIndexRoute: ReportsIndexRoute,
