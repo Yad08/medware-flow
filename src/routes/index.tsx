@@ -25,11 +25,11 @@ type Stats = {
   hazmatCount: number;
 };
 
-type RecentActivity = { id: string; label: string; type: string; at: string };
+type ActivityEntry = { id: string; label: string; type: string; at: string };
 
 function Dashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
-  const [activity, setActivity] = useState<RecentActivity[]>([]);
+  const [activity, setActivity] = useState<ActivityEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ function Dashboard() {
         hazmatCount,
       });
 
-      const merged: RecentActivity[] = [
+      const merged: ActivityEntry[] = [
         ...(recentItems.data ?? []).map((r) => ({ id: r.id, label: `Item added: ${r.name}`, type: "item", at: r.created_at })),
         ...(recentPallets.data ?? []).map((r) => ({ id: r.id, label: `Pallet created: ${r.name}`, type: "pallet", at: r.created_at })),
         ...(recentContainers.data ?? []).map((r) => ({ id: r.id, label: `Container created: ${r.name}`, type: "container", at: r.created_at })),
