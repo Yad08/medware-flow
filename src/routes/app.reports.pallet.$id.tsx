@@ -36,7 +36,7 @@ function PalletReport() {
     <div className="min-h-screen flex items-center justify-center p-8">
       <div className="text-center space-y-3">
         <p className="text-sm text-muted-foreground">Pallet not found or still loading…</p>
-        <Button asChild variant="outline" size="sm"><Link to="/reports"><ArrowLeft className="h-4 w-4 mr-1.5" />Back to reports</Link></Button>
+        <Button asChild variant="outline" size="sm"><Link to="/app/reports"><ArrowLeft className="h-4 w-4 mr-1.5" />Back to reports</Link></Button>
       </div>
     </div>
   );
