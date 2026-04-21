@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Boxes, ArrowLeft, Briefcase, Users, Delete } from "lucide-react";
+import { Boxes, ArrowLeft, Delete } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
