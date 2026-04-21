@@ -9,38 +9,141 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ShipmentsRouteImport } from './routes/shipments'
+import { Route as PalletsRouteImport } from './routes/pallets'
+import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ReportsIndexRouteImport } from './routes/reports.index'
+import { Route as ReportsPalletIdRouteImport } from './routes/reports.pallet.$id'
+import { Route as ReportsContainerIdRouteImport } from './routes/reports.container.$id'
 
+const ShipmentsRoute = ShipmentsRouteImport.update({
+  id: '/shipments',
+  path: '/shipments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PalletsRoute = PalletsRouteImport.update({
+  id: '/pallets',
+  path: '/pallets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InventoryRoute = InventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReportsIndexRoute = ReportsIndexRouteImport.update({
+  id: '/reports/',
+  path: '/reports/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsPalletIdRoute = ReportsPalletIdRouteImport.update({
+  id: '/reports/pallet/$id',
+  path: '/reports/pallet/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsContainerIdRoute = ReportsContainerIdRouteImport.update({
+  id: '/reports/container/$id',
+  path: '/reports/container/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/inventory': typeof InventoryRoute
+  '/pallets': typeof PalletsRoute
+  '/shipments': typeof ShipmentsRoute
+  '/reports/': typeof ReportsIndexRoute
+  '/reports/container/$id': typeof ReportsContainerIdRoute
+  '/reports/pallet/$id': typeof ReportsPalletIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/inventory': typeof InventoryRoute
+  '/pallets': typeof PalletsRoute
+  '/shipments': typeof ShipmentsRoute
+  '/reports': typeof ReportsIndexRoute
+  '/reports/container/$id': typeof ReportsContainerIdRoute
+  '/reports/pallet/$id': typeof ReportsPalletIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/inventory': typeof InventoryRoute
+  '/pallets': typeof PalletsRoute
+  '/shipments': typeof ShipmentsRoute
+  '/reports/': typeof ReportsIndexRoute
+  '/reports/container/$id': typeof ReportsContainerIdRoute
+  '/reports/pallet/$id': typeof ReportsPalletIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/inventory'
+    | '/pallets'
+    | '/shipments'
+    | '/reports/'
+    | '/reports/container/$id'
+    | '/reports/pallet/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/inventory'
+    | '/pallets'
+    | '/shipments'
+    | '/reports'
+    | '/reports/container/$id'
+    | '/reports/pallet/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/inventory'
+    | '/pallets'
+    | '/shipments'
+    | '/reports/'
+    | '/reports/container/$id'
+    | '/reports/pallet/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  InventoryRoute: typeof InventoryRoute
+  PalletsRoute: typeof PalletsRoute
+  ShipmentsRoute: typeof ShipmentsRoute
+  ReportsIndexRoute: typeof ReportsIndexRoute
+  ReportsContainerIdRoute: typeof ReportsContainerIdRoute
+  ReportsPalletIdRoute: typeof ReportsPalletIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/shipments': {
+      id: '/shipments'
+      path: '/shipments'
+      fullPath: '/shipments'
+      preLoaderRoute: typeof ShipmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pallets': {
+      id: '/pallets'
+      path: '/pallets'
+      fullPath: '/pallets'
+      preLoaderRoute: typeof PalletsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inventory': {
+      id: '/inventory'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +151,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reports/': {
+      id: '/reports/'
+      path: '/reports'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof ReportsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports/pallet/$id': {
+      id: '/reports/pallet/$id'
+      path: '/reports/pallet/$id'
+      fullPath: '/reports/pallet/$id'
+      preLoaderRoute: typeof ReportsPalletIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports/container/$id': {
+      id: '/reports/container/$id'
+      path: '/reports/container/$id'
+      fullPath: '/reports/container/$id'
+      preLoaderRoute: typeof ReportsContainerIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  InventoryRoute: InventoryRoute,
+  PalletsRoute: PalletsRoute,
+  ShipmentsRoute: ShipmentsRoute,
+  ReportsIndexRoute: ReportsIndexRoute,
+  ReportsContainerIdRoute: ReportsContainerIdRoute,
+  ReportsPalletIdRoute: ReportsPalletIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
