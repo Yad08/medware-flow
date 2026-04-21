@@ -51,6 +51,7 @@ function InventoryPage() {
   const [form, setForm] = useState<FormState>(empty);
   const [errors, setErrors] = useState<FieldErrors<FormState>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
   const load = async () => {
     const [i, p] = await Promise.all([
