@@ -12,7 +12,7 @@ import { supabase, type Item, type Pallet } from "@/lib/db";
 import { toast } from "sonner";
 import { palletSchema, flattenErrors } from "@/lib/validation";
 
-export const Route = createFileRoute("/pallets")({
+export const Route = createFileRoute("/app/pallets")({
   head: () => ({
     meta: [
       { title: "Pallets — MedWare Logistics" },

@@ -14,7 +14,7 @@ import { supabase, type Item, type Pallet } from "@/lib/db";
 import { toast } from "sonner";
 import { itemSchema, flattenErrors, type FieldErrors } from "@/lib/validation";
 
-export const Route = createFileRoute("/inventory")({
+export const Route = createFileRoute("/app/inventory")({
   head: () => ({
     meta: [
       { title: "Inventory — MedWare Logistics" },

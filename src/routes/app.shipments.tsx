@@ -13,7 +13,7 @@ import { supabase, type Container, type Pallet, type Item } from "@/lib/db";
 import { toast } from "sonner";
 import { containerSchema, flattenErrors } from "@/lib/validation";
 
-export const Route = createFileRoute("/shipments")({
+export const Route = createFileRoute("/app/shipments")({
   head: () => ({
     meta: [
       { title: "Shipments — MedWare Logistics" },
