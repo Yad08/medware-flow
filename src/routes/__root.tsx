@@ -37,11 +37,19 @@ export const Route = createRootRoute({
       { property: "og:description", content: "INSY4325" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@MedWare" },
       { name: "twitter:title", content: "MedWare" },
       { name: "twitter:description", content: "INSY4325" },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f563f7b9-8852-4616-9ecb-4f258964e668" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f563f7b9-8852-4616-9ecb-4f258964e668" },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f563f7b9-8852-4616-9ecb-4f258964e668",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f563f7b9-8852-4616-9ecb-4f258964e668",
+      },
     ],
     links: [
       {
