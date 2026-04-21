@@ -165,7 +165,7 @@ function LoginPage() {
               disabled={submitting || pin.length < 4}
               className="mt-5 w-full h-12 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-60"
             >
-              {submitting ? "Verifying…" : "Sign in"}
+              {submitting ? "Verifying…" : "Enter System"}
             </button>
 
             {/* Hidden input for keyboard accessibility */}
@@ -184,11 +184,6 @@ function LoginPage() {
               aria-label="PIN"
             />
           </form>
-
-          <p className="text-xs text-muted-foreground text-center mt-5">
-            Demo PINs · Employee <span className="font-mono text-foreground">1234</span> ·
-            Volunteer <span className="font-mono text-foreground">1111</span>
-          </p>
         </div>
       </main>
     </div>
