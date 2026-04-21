@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase, type Item, type Pallet, type Container } from "@/lib/db";
 import { format } from "date-fns";
 
-export const Route = createFileRoute("/reports/container/$id")({
+export const Route = createFileRoute("/app/reports/container/$id")({
   head: () => ({
     meta: [
       { title: "Container Report — MedWare Logistics" },

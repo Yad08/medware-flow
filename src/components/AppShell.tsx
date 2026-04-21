@@ -1,22 +1,41 @@
-import { Link, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, Package, Layers, Container as ContainerIcon, FileBarChart, Boxes, Menu, X } from "lucide-react";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import {
+  LayoutDashboard,
+  Package,
+  Layers,
+  Container as ContainerIcon,
+  FileBarChart,
+  Boxes,
+  Menu,
+  X,
+  LogOut,
+  Briefcase,
+  Users,
+} from "lucide-react";
 import { ReactNode, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
 const nav: NavItem[] = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/inventory", label: "Inventory", icon: Package },
-  { to: "/pallets", label: "Pallets", icon: Layers },
-  { to: "/shipments", label: "Shipments", icon: ContainerIcon },
-  { to: "/reports", label: "Reports", icon: FileBarChart },
+  { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/app/inventory", label: "Inventory", icon: Package },
+  { to: "/app/pallets", label: "Pallets", icon: Layers },
+  { to: "/app/shipments", label: "Shipments", icon: ContainerIcon },
+  { to: "/app/reports", label: "Reports", icon: FileBarChart },
 ];
 
 function SidebarContent({ path, onNav }: { path: string; onNav?: () => void }) {
   return (
     <>
-      <div className="h-16 flex items-center gap-2.5 px-6 border-b border-sidebar-border">
+      <Link
+        to="/"
+        onClick={onNav}
+        className="h-16 flex items-center gap-2.5 px-6 border-b border-sidebar-border hover:bg-sidebar-accent/40 transition-colors"
+        aria-label="Home — MedWare Logistics"
+        title="Back to home"
+      >
         <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
           <Boxes className="h-5 w-5" />
         </div>
@@ -24,7 +43,7 @@ function SidebarContent({ path, onNav }: { path: string; onNav?: () => void }) {
           <div className="font-semibold text-sidebar-foreground">MedWare</div>
           <div className="text-[11px] text-muted-foreground -mt-0.5">Logistics</div>
         </div>
-      </div>
+      </Link>
       <nav className="flex-1 p-3 space-y-0.5">
         {nav.map((item) => {
           const active = item.exact ? path === item.to : path.startsWith(item.to);
@@ -32,7 +51,7 @@ function SidebarContent({ path, onNav }: { path: string; onNav?: () => void }) {
           return (
             <Link
               key={item.to}
-              to={item.to as "/"}
+              to={item.to as "/app"}
               onClick={onNav}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
@@ -58,10 +77,36 @@ function SidebarContent({ path, onNav }: { path: string; onNav?: () => void }) {
   );
 }
 
-export function AppShell({ title, subtitle, children, actions }: { title: string; subtitle?: string; children: ReactNode; actions?: ReactNode }) {
+export function AppShell({
+  title,
+  subtitle,
+  children,
+  actions,
+}: {
+  title: string;
+  subtitle?: string;
+  children: ReactNode;
+  actions?: ReactNode;
+}) {
   const location = useLocation();
   const path = location.pathname;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const initials = (user?.display_name ?? "")
+    .split(" ")
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase() || "??";
+
+  const isEmployee = user?.role === "employee";
+
+  const onLogout = () => {
+    logout();
+    navigate({ to: "/" });
+  };
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -100,11 +145,30 @@ export function AppShell({ title, subtitle, children, actions }: { title: string
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2.5 pl-3 border-l border-border">
-              <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">EM</div>
-              <div className="hidden sm:block leading-tight">
-                <div className="text-sm font-medium">Employee</div>
-                <div className="text-[11px] text-muted-foreground">Full access</div>
+              <div
+                className={cn(
+                  "h-9 w-9 rounded-full flex items-center justify-center text-sm font-medium",
+                  isEmployee
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-accent text-accent-foreground"
+                )}
+                title={user?.display_name}
+              >
+                {initials}
               </div>
+              <div className="hidden sm:block leading-tight">
+                <div className="text-sm font-medium">{user?.display_name ?? "Guest"}</div>
+                <div className="text-[11px] text-muted-foreground inline-flex items-center gap-1">
+                  {isEmployee ? (
+                    <><Briefcase className="h-3 w-3" /> Employee · Full access</>
+                  ) : (
+                    <><Users className="h-3 w-3" /> Volunteer · Limited access</>
+                  )}
+                </div>
+              </div>
+              <Button variant="ghost" size="icon" onClick={onLogout} aria-label="Sign out" title="Sign out">
+                <LogOut className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </header>

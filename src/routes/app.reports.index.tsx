@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase, type Container, type Pallet } from "@/lib/db";
 import { format } from "date-fns";
 
-export const Route = createFileRoute("/reports/")({
+export const Route = createFileRoute("/app/reports/")({
   head: () => ({
     meta: [
       { title: "Reports — MedWare Logistics" },
@@ -59,7 +59,7 @@ function ReportsIndex() {
             </div>
           </div>
           <p className="text-sm text-muted-foreground mt-3">View any pallet's contents, weights and hazmat flags. Open from the Pallets list.</p>
-          <Button asChild variant="outline" size="sm" className="mt-3"><Link to="/pallets">Go to Pallets</Link></Button>
+          <Button asChild variant="outline" size="sm" className="mt-3"><Link to="/app/pallets">Go to Pallets</Link></Button>
         </div>
         <div className="bg-card border border-border rounded-xl p-5 shadow-card">
           <div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ function ReportsIndex() {
             </div>
           </div>
           <p className="text-sm text-muted-foreground mt-3">Generate printable shipment manifests with weights and hazmat summary.</p>
-          <Button asChild variant="outline" size="sm" className="mt-3"><Link to="/shipments">Go to Shipments</Link></Button>
+          <Button asChild variant="outline" size="sm" className="mt-3"><Link to="/app/shipments">Go to Shipments</Link></Button>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ function ReportsIndex() {
                 </div>
                 <Badge variant="secondary" className="capitalize">{r.type}</Badge>
                 <Button asChild variant="ghost" size="sm">
-                  <Link to={r.type === "pallet" ? "/reports/pallet/$id" : "/reports/container/$id"} params={{ id: r.reference_id }}>View</Link>
+                  <Link to={r.type === "pallet" ? "/app/reports/pallet/$id" : "/app/reports/container/$id"} params={{ id: r.reference_id }}>View</Link>
                 </Button>
               </li>
             ))}

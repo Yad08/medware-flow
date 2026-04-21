@@ -13,8 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import { supabase, type Item, type Pallet } from "@/lib/db";
 import { toast } from "sonner";
 import { itemSchema, flattenErrors, type FieldErrors } from "@/lib/validation";
+import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/inventory")({
+export const Route = createFileRoute("/app/inventory")({
   head: () => ({
     meta: [
       { title: "Inventory — MedWare Logistics" },
@@ -37,6 +38,11 @@ type FormState = {
 const empty: FormState = { name: "", type: "box", quantity: 1, weight: 0, is_hazmat: false, pallet_id: null };
 
 function InventoryPage() {
+  const { can } = useAuth();
+  const canCreate = can("items.create");
+  const canEdit = can("items.edit");
+  const canDelete = can("items.delete");
+
   const [items, setItems] = useState<Item[]>([]);
   const [pallets, setPallets] = useState<Pallet[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,6 +97,7 @@ function InventoryPage() {
   };
 
   const onDelete = async (id: string, name: string) => {
+    if (!canDelete) return toast.error("Only employees can delete items");
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
     const { error } = await supabase.from("items").delete().eq("id", id);
     if (error) return toast.error(error.message);
@@ -117,7 +124,7 @@ function InventoryPage() {
     <AppShell
       title="Inventory"
       subtitle={`${items.length} items tracked · ${items.filter(i => i.is_hazmat).length} hazmat`}
-      actions={<Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button>}
+      actions={canCreate ? <Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button> : undefined}
     >
       {loading ? (
         <div className="text-sm text-muted-foreground">Loading…</div>
@@ -126,7 +133,7 @@ function InventoryPage() {
           icon={Package}
           title="No inventory yet"
           description="Add your first medical supply item to start building pallets and shipments."
-          action={<Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button>}
+          action={canCreate ? <Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button> : undefined}
         />
       ) : (
         <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
@@ -166,8 +173,8 @@ function InventoryPage() {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="inline-flex gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => onEdit(item)} aria-label="Edit"><Pencil className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon" onClick={() => onDelete(item.id, item.name)} aria-label="Delete"><Trash2 className="h-4 w-4" /></Button>
+                        {canEdit && <Button variant="ghost" size="icon" onClick={() => onEdit(item)} aria-label="Edit"><Pencil className="h-4 w-4" /></Button>}
+                        {canDelete && <Button variant="ghost" size="icon" onClick={() => onDelete(item.id, item.name)} aria-label="Delete"><Trash2 className="h-4 w-4" /></Button>}
                       </div>
                     </td>
                   </tr>

@@ -11,8 +11,9 @@ import { Badge } from "@/components/ui/badge";
 import { supabase, type Item, type Pallet } from "@/lib/db";
 import { toast } from "sonner";
 import { palletSchema, flattenErrors } from "@/lib/validation";
+import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/pallets")({
+export const Route = createFileRoute("/app/pallets")({
   head: () => ({
     meta: [
       { title: "Pallets — MedWare Logistics" },
@@ -23,6 +24,11 @@ export const Route = createFileRoute("/pallets")({
 });
 
 function PalletsPage() {
+  const { can } = useAuth();
+  const canCreate = can("pallets.create");
+  const canDelete = can("pallets.delete");
+  const canReport = can("reports.generate");
+
   const [pallets, setPallets] = useState<Pallet[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,6 +78,7 @@ function PalletsPage() {
   };
 
   const remove = async (id: string, palletName: string) => {
+    if (!canDelete) return toast.error("Only employees can delete pallets");
     const itemCount = itemsForPallet(id).length;
     const msg = itemCount > 0
       ? `"${palletName}" has ${itemCount} item(s). They will be unassigned. Continue?`
@@ -83,6 +90,7 @@ function PalletsPage() {
   };
 
   const generateReport = async (p: Pallet) => {
+    if (!canReport) return toast.error("Only employees can generate reports");
     if (itemsForPallet(p.id).length === 0) {
       return toast.error("Pallet must contain at least 1 item to generate a report");
     }
@@ -95,7 +103,7 @@ function PalletsPage() {
     <AppShell
       title="Pallets"
       subtitle={`${pallets.length} pallets · ${pallets.filter(p => itemsForPallet(p.id).length === 0).length} empty`}
-      actions={<Button onClick={() => { setNameError(undefined); setOpen(true); }}><Plus className="h-4 w-4 mr-1.5" /> Create Pallet</Button>}
+      actions={canCreate ? <Button onClick={() => { setNameError(undefined); setOpen(true); }}><Plus className="h-4 w-4 mr-1.5" /> Create Pallet</Button> : undefined}
     >
       {loading ? (
         <div className="text-sm text-muted-foreground">Loading…</div>
@@ -104,7 +112,7 @@ function PalletsPage() {
           icon={Layers}
           title="No pallets yet"
           description="Create your first pallet to start grouping inventory items for shipment."
-          action={<Button onClick={() => setOpen(true)}><Plus className="h-4 w-4 mr-1.5" /> Create Pallet</Button>}
+          action={canCreate ? <Button onClick={() => setOpen(true)}><Plus className="h-4 w-4 mr-1.5" /> Create Pallet</Button> : undefined}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -164,10 +172,10 @@ function PalletsPage() {
                   </div>
                   <div className="inline-flex gap-1">
                     <Button asChild variant="ghost" size="icon" title="View report" disabled={isEmpty}>
-                      <Link to="/reports/pallet/$id" params={{ id: p.id }} aria-disabled={isEmpty}><FileText className="h-4 w-4" /></Link>
+                      <Link to="/app/reports/pallet/$id" params={{ id: p.id }} aria-disabled={isEmpty}><FileText className="h-4 w-4" /></Link>
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => generateReport(p)} title="Generate report"><FileText className="h-4 w-4 text-primary" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => remove(p.id, p.name)} aria-label="Delete"><Trash2 className="h-4 w-4" /></Button>
+                    {canReport && <Button variant="ghost" size="icon" onClick={() => generateReport(p)} title="Generate report"><FileText className="h-4 w-4 text-primary" /></Button>}
+                    {canDelete && <Button variant="ghost" size="icon" onClick={() => remove(p.id, p.name)} aria-label="Delete"><Trash2 className="h-4 w-4" /></Button>}
                   </div>
                 </div>
               </div>

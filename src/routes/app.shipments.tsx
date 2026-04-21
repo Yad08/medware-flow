@@ -12,8 +12,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase, type Container, type Pallet, type Item } from "@/lib/db";
 import { toast } from "sonner";
 import { containerSchema, flattenErrors } from "@/lib/validation";
+import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/shipments")({
+export const Route = createFileRoute("/app/shipments")({
   head: () => ({
     meta: [
       { title: "Shipments — MedWare Logistics" },
@@ -24,6 +25,13 @@ export const Route = createFileRoute("/shipments")({
 });
 
 function ShipmentsPage() {
+  const { can } = useAuth();
+  const canCreate = can("containers.create");
+  const canDelete = can("containers.delete");
+  const canShip = can("containers.ship");
+  const canAssign = can("pallets.assign");
+  const canReport = can("reports.generate");
+
   const [containers, setContainers] = useState<Container[]>([]);
   const [pallets, setPallets] = useState<Pallet[]>([]);
   const [items, setItems] = useState<Item[]>([]);
@@ -82,6 +90,7 @@ function ShipmentsPage() {
   };
 
   const remove = async (id: string, cname: string) => {
+    if (!canDelete) return toast.error("Only employees can delete containers");
     if (!confirm(`Delete "${cname}"? Pallet assignments and reports will be removed.`)) return;
     const { error } = await supabase.from("containers").delete().eq("id", id);
     if (error) return toast.error(error.message);
@@ -89,6 +98,7 @@ function ShipmentsPage() {
   };
 
   const ship = async (c: Container) => {
+    if (!canShip) return toast.error("Only employees can ship containers");
     const ids = palletsInContainer(c.id);
     if (ids.length < 1) return toast.error("Container must have at least 1 pallet to ship");
     if (ids.length > 42) return toast.error("Container exceeds the 42-pallet limit");
@@ -100,6 +110,7 @@ function ShipmentsPage() {
   };
 
   const generateReport = async (c: Container) => {
+    if (!canReport) return toast.error("Only employees can generate reports");
     if (palletsInContainer(c.id).length === 0) return toast.error("Container has no pallets — nothing to report");
     const { error } = await supabase.from("reports").insert({ type: "container", reference_id: c.id });
     if (error) return toast.error(error.message);
@@ -138,7 +149,7 @@ function ShipmentsPage() {
     <AppShell
       title="Shipments"
       subtitle={`${containers.length} containers · ${containers.filter(c => c.status === "shipped").length} shipped`}
-      actions={<Button onClick={() => { setNameError(undefined); setOpenCreate(true); }}><Plus className="h-4 w-4 mr-1.5" /> Create Container</Button>}
+      actions={canCreate ? <Button onClick={() => { setNameError(undefined); setOpenCreate(true); }}><Plus className="h-4 w-4 mr-1.5" /> Create Container</Button> : undefined}
     >
       {loading ? (
         <div className="text-sm text-muted-foreground">Loading…</div>
@@ -147,7 +158,7 @@ function ShipmentsPage() {
           icon={ContainerIcon}
           title="No containers yet"
           description="Create a container to start assigning pallets and preparing for shipment."
-          action={<Button onClick={() => setOpenCreate(true)}><Plus className="h-4 w-4 mr-1.5" /> Create Container</Button>}
+          action={canCreate ? <Button onClick={() => setOpenCreate(true)}><Plus className="h-4 w-4 mr-1.5" /> Create Container</Button> : undefined}
         />
       ) : (
         <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
@@ -199,15 +210,15 @@ function ShipmentsPage() {
                         <div className="inline-flex gap-1">
                           {c.status === "preparing" && (
                             <>
-                              <Button variant="ghost" size="sm" onClick={() => openAssign(c)}>Assign</Button>
-                              <Button variant="ghost" size="sm" onClick={() => ship(c)}><Send className="h-4 w-4 mr-1" />Ship</Button>
+                              {canAssign && <Button variant="ghost" size="sm" onClick={() => openAssign(c)}>Assign</Button>}
+                              {canShip && <Button variant="ghost" size="sm" onClick={() => ship(c)}><Send className="h-4 w-4 mr-1" />Ship</Button>}
                             </>
                           )}
-                          <Button variant="ghost" size="icon" onClick={() => generateReport(c)} title="Generate report"><FileText className="h-4 w-4" /></Button>
+                          {canReport && <Button variant="ghost" size="icon" onClick={() => generateReport(c)} title="Generate report"><FileText className="h-4 w-4" /></Button>}
                           <Button asChild variant="ghost" size="icon" title="View report">
-                            <Link to="/reports/container/$id" params={{ id: c.id }}><FileText className="h-4 w-4 text-primary" /></Link>
+                            <Link to="/app/reports/container/$id" params={{ id: c.id }}><FileText className="h-4 w-4 text-primary" /></Link>
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => remove(c.id, c.name)} aria-label="Delete"><Trash2 className="h-4 w-4" /></Button>
+                          {canDelete && <Button variant="ghost" size="icon" onClick={() => remove(c.id, c.name)} aria-label="Delete"><Trash2 className="h-4 w-4" /></Button>}
                         </div>
                       </td>
                     </tr>
@@ -219,7 +230,6 @@ function ShipmentsPage() {
         </div>
       )}
 
-      {/* Create */}
       <Dialog open={openCreate} onOpenChange={setOpenCreate}>
         <DialogContent>
           <DialogHeader>
@@ -238,7 +248,6 @@ function ShipmentsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Assign pallets */}
       <Dialog open={!!assignTo} onOpenChange={(v) => !v && setAssignTo(null)}>
         <DialogContent>
           <DialogHeader>

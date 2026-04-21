@@ -9,27 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ShipmentsRouteImport } from './routes/shipments'
-import { Route as PalletsRouteImport } from './routes/pallets'
-import { Route as InventoryRouteImport } from './routes/inventory'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ReportsIndexRouteImport } from './routes/reports.index'
-import { Route as ReportsPalletIdRouteImport } from './routes/reports.pallet.$id'
-import { Route as ReportsContainerIdRouteImport } from './routes/reports.container.$id'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppShipmentsRouteImport } from './routes/app.shipments'
+import { Route as AppPalletsRouteImport } from './routes/app.pallets'
+import { Route as AppInventoryRouteImport } from './routes/app.inventory'
+import { Route as AppReportsIndexRouteImport } from './routes/app.reports.index'
+import { Route as AppReportsPalletIdRouteImport } from './routes/app.reports.pallet.$id'
+import { Route as AppReportsContainerIdRouteImport } from './routes/app.reports.container.$id'
 
-const ShipmentsRoute = ShipmentsRouteImport.update({
-  id: '/shipments',
-  path: '/shipments',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PalletsRoute = PalletsRouteImport.update({
-  id: '/pallets',
-  path: '/pallets',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InventoryRoute = InventoryRouteImport.update({
-  id: '/inventory',
-  path: '/inventory',
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,111 +35,136 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReportsIndexRoute = ReportsIndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppShipmentsRoute = AppShipmentsRouteImport.update({
+  id: '/shipments',
+  path: '/shipments',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPalletsRoute = AppPalletsRouteImport.update({
+  id: '/pallets',
+  path: '/pallets',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInventoryRoute = AppInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsIndexRoute = AppReportsIndexRouteImport.update({
   id: '/reports/',
   path: '/reports/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const ReportsPalletIdRoute = ReportsPalletIdRouteImport.update({
+const AppReportsPalletIdRoute = AppReportsPalletIdRouteImport.update({
   id: '/reports/pallet/$id',
   path: '/reports/pallet/$id',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const ReportsContainerIdRoute = ReportsContainerIdRouteImport.update({
+const AppReportsContainerIdRoute = AppReportsContainerIdRouteImport.update({
   id: '/reports/container/$id',
   path: '/reports/container/$id',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/inventory': typeof InventoryRoute
-  '/pallets': typeof PalletsRoute
-  '/shipments': typeof ShipmentsRoute
-  '/reports/': typeof ReportsIndexRoute
-  '/reports/container/$id': typeof ReportsContainerIdRoute
-  '/reports/pallet/$id': typeof ReportsPalletIdRoute
+  '/app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/pallets': typeof AppPalletsRoute
+  '/app/shipments': typeof AppShipmentsRoute
+  '/app/': typeof AppIndexRoute
+  '/app/reports/': typeof AppReportsIndexRoute
+  '/app/reports/container/$id': typeof AppReportsContainerIdRoute
+  '/app/reports/pallet/$id': typeof AppReportsPalletIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/inventory': typeof InventoryRoute
-  '/pallets': typeof PalletsRoute
-  '/shipments': typeof ShipmentsRoute
-  '/reports': typeof ReportsIndexRoute
-  '/reports/container/$id': typeof ReportsContainerIdRoute
-  '/reports/pallet/$id': typeof ReportsPalletIdRoute
+  '/login': typeof LoginRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/pallets': typeof AppPalletsRoute
+  '/app/shipments': typeof AppShipmentsRoute
+  '/app': typeof AppIndexRoute
+  '/app/reports': typeof AppReportsIndexRoute
+  '/app/reports/container/$id': typeof AppReportsContainerIdRoute
+  '/app/reports/pallet/$id': typeof AppReportsPalletIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/inventory': typeof InventoryRoute
-  '/pallets': typeof PalletsRoute
-  '/shipments': typeof ShipmentsRoute
-  '/reports/': typeof ReportsIndexRoute
-  '/reports/container/$id': typeof ReportsContainerIdRoute
-  '/reports/pallet/$id': typeof ReportsPalletIdRoute
+  '/app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/pallets': typeof AppPalletsRoute
+  '/app/shipments': typeof AppShipmentsRoute
+  '/app/': typeof AppIndexRoute
+  '/app/reports/': typeof AppReportsIndexRoute
+  '/app/reports/container/$id': typeof AppReportsContainerIdRoute
+  '/app/reports/pallet/$id': typeof AppReportsPalletIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/inventory'
-    | '/pallets'
-    | '/shipments'
-    | '/reports/'
-    | '/reports/container/$id'
-    | '/reports/pallet/$id'
+    | '/app'
+    | '/login'
+    | '/app/inventory'
+    | '/app/pallets'
+    | '/app/shipments'
+    | '/app/'
+    | '/app/reports/'
+    | '/app/reports/container/$id'
+    | '/app/reports/pallet/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/inventory'
-    | '/pallets'
-    | '/shipments'
-    | '/reports'
-    | '/reports/container/$id'
-    | '/reports/pallet/$id'
+    | '/login'
+    | '/app/inventory'
+    | '/app/pallets'
+    | '/app/shipments'
+    | '/app'
+    | '/app/reports'
+    | '/app/reports/container/$id'
+    | '/app/reports/pallet/$id'
   id:
     | '__root__'
     | '/'
-    | '/inventory'
-    | '/pallets'
-    | '/shipments'
-    | '/reports/'
-    | '/reports/container/$id'
-    | '/reports/pallet/$id'
+    | '/app'
+    | '/login'
+    | '/app/inventory'
+    | '/app/pallets'
+    | '/app/shipments'
+    | '/app/'
+    | '/app/reports/'
+    | '/app/reports/container/$id'
+    | '/app/reports/pallet/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  InventoryRoute: typeof InventoryRoute
-  PalletsRoute: typeof PalletsRoute
-  ShipmentsRoute: typeof ShipmentsRoute
-  ReportsIndexRoute: typeof ReportsIndexRoute
-  ReportsContainerIdRoute: typeof ReportsContainerIdRoute
-  ReportsPalletIdRoute: typeof ReportsPalletIdRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/shipments': {
-      id: '/shipments'
-      path: '/shipments'
-      fullPath: '/shipments'
-      preLoaderRoute: typeof ShipmentsRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pallets': {
-      id: '/pallets'
-      path: '/pallets'
-      fullPath: '/pallets'
-      preLoaderRoute: typeof PalletsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/inventory': {
-      id: '/inventory'
-      path: '/inventory'
-      fullPath: '/inventory'
-      preLoaderRoute: typeof InventoryRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -151,38 +174,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reports/': {
-      id: '/reports/'
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/shipments': {
+      id: '/app/shipments'
+      path: '/shipments'
+      fullPath: '/app/shipments'
+      preLoaderRoute: typeof AppShipmentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/pallets': {
+      id: '/app/pallets'
+      path: '/pallets'
+      fullPath: '/app/pallets'
+      preLoaderRoute: typeof AppPalletsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/inventory': {
+      id: '/app/inventory'
+      path: '/inventory'
+      fullPath: '/app/inventory'
+      preLoaderRoute: typeof AppInventoryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/reports/': {
+      id: '/app/reports/'
       path: '/reports'
-      fullPath: '/reports/'
-      preLoaderRoute: typeof ReportsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/reports/'
+      preLoaderRoute: typeof AppReportsIndexRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/reports/pallet/$id': {
-      id: '/reports/pallet/$id'
+    '/app/reports/pallet/$id': {
+      id: '/app/reports/pallet/$id'
       path: '/reports/pallet/$id'
-      fullPath: '/reports/pallet/$id'
-      preLoaderRoute: typeof ReportsPalletIdRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/reports/pallet/$id'
+      preLoaderRoute: typeof AppReportsPalletIdRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/reports/container/$id': {
-      id: '/reports/container/$id'
+    '/app/reports/container/$id': {
+      id: '/app/reports/container/$id'
       path: '/reports/container/$id'
-      fullPath: '/reports/container/$id'
-      preLoaderRoute: typeof ReportsContainerIdRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/app/reports/container/$id'
+      preLoaderRoute: typeof AppReportsContainerIdRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppInventoryRoute: typeof AppInventoryRoute
+  AppPalletsRoute: typeof AppPalletsRoute
+  AppShipmentsRoute: typeof AppShipmentsRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppReportsIndexRoute: typeof AppReportsIndexRoute
+  AppReportsContainerIdRoute: typeof AppReportsContainerIdRoute
+  AppReportsPalletIdRoute: typeof AppReportsPalletIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppInventoryRoute: AppInventoryRoute,
+  AppPalletsRoute: AppPalletsRoute,
+  AppShipmentsRoute: AppShipmentsRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppReportsIndexRoute: AppReportsIndexRoute,
+  AppReportsContainerIdRoute: AppReportsContainerIdRoute,
+  AppReportsPalletIdRoute: AppReportsPalletIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  InventoryRoute: InventoryRoute,
-  PalletsRoute: PalletsRoute,
-  ShipmentsRoute: ShipmentsRoute,
-  ReportsIndexRoute: ReportsIndexRoute,
-  ReportsContainerIdRoute: ReportsContainerIdRoute,
-  ReportsPalletIdRoute: ReportsPalletIdRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

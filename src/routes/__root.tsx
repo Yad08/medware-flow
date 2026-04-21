@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/lib/auth";
 
 import appCss from "../styles.css?url";
 
@@ -30,26 +31,15 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MedWare" },
-      { name: "description", content: "INSY4325" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "MedWare" },
-      { property: "og:description", content: "INSY4325" },
+      { title: "MedWare Logistics — Medical Supplies Network Inc." },
+      { name: "description", content: "Digital inventory and shipment management for MSNI's nonprofit medical supply warehouse." },
+      { name: "author", content: "MedWare Logistics" },
+      { property: "og:title", content: "MedWare Logistics" },
+      { property: "og:description", content: "Inventory and shipment management for humanitarian medical supply distribution." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@MedWare" },
-      { name: "twitter:title", content: "MedWare" },
-      { name: "twitter:description", content: "INSY4325" },
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f563f7b9-8852-4616-9ecb-4f258964e668",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f563f7b9-8852-4616-9ecb-4f258964e668",
-      },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "MedWare Logistics" },
+      { name: "twitter:description", content: "Inventory and shipment management for humanitarian medical supply distribution." },
     ],
     links: [
       {
@@ -79,9 +69,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <>
+    <AuthProvider>
       <Outlet />
       <Toaster />
-    </>
+    </AuthProvider>
   );
 }
