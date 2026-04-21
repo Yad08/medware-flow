@@ -76,8 +76,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginWithPin: AuthContextValue["loginWithPin"] = async (pin) => {
     const trimmed = pin.trim();
+    const invalid = "Invalid PIN. Please try again.";
     if (!/^[0-9]{4,6}$/.test(trimmed)) {
-      return { ok: false, error: "PIN must be 4–6 digits" };
+      return { ok: false, error: invalid };
     }
     const { data, error } = await supabase
       .from("app_users")
@@ -85,8 +86,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .eq("pin_code", trimmed)
       .maybeSingle();
 
-    if (error) return { ok: false, error: error.message };
-    if (!data || !data.is_active) return { ok: false, error: "Invalid PIN" };
+    if (error) return { ok: false, error: invalid };
+    if (!data || !data.is_active) return { ok: false, error: invalid };
 
     const next: AuthUser = {
       id: data.id,
