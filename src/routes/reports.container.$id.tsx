@@ -41,21 +41,28 @@ function ContainerReport() {
     })();
   }, [id]);
 
-  if (!container) return <div className="p-8 text-sm text-muted-foreground">Loading…</div>;
+  if (!container) return (
+    <div className="min-h-screen flex items-center justify-center p-8">
+      <div className="text-center space-y-3">
+        <p className="text-sm text-muted-foreground">Container not found or still loading…</p>
+        <Button asChild variant="outline" size="sm"><Link to="/reports"><ArrowLeft className="h-4 w-4 mr-1.5" />Back to reports</Link></Button>
+      </div>
+    </div>
+  );
 
   const totalWeight = items.reduce((s, i) => s + Number(i.weight) * i.quantity, 0);
   const totalUnits = items.reduce((s, i) => s + i.quantity, 0);
   const hazmatCount = items.filter((i) => i.is_hazmat).length;
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
+    <div className="min-h-screen bg-background py-8 px-4 print-page">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6 no-print">
           <Button asChild variant="ghost" size="sm"><Link to="/reports"><ArrowLeft className="h-4 w-4 mr-1.5" />Back</Link></Button>
           <Button onClick={() => window.print()}><Printer className="h-4 w-4 mr-1.5" />Print</Button>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-8 shadow-card">
+        <div className="bg-card border border-border rounded-xl p-8 shadow-card print-container">
           <div className="flex items-start justify-between border-b border-border pb-4 mb-6">
             <div>
               <div className="text-xs text-muted-foreground uppercase tracking-wider">MedWare Logistics</div>
