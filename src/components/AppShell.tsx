@@ -3,13 +3,14 @@ import { LayoutDashboard, Package, Layers, Container as ContainerIcon, FileBarCh
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-const nav = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const nav: NavItem[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/inventory", label: "Inventory", icon: Package },
   { to: "/pallets", label: "Pallets", icon: Layers },
   { to: "/shipments", label: "Shipments", icon: ContainerIcon },
   { to: "/reports", label: "Reports", icon: FileBarChart },
-] as const;
+];
 
 export function AppShell({ title, subtitle, children, actions }: { title: string; subtitle?: string; children: ReactNode; actions?: ReactNode }) {
   const location = useLocation();
