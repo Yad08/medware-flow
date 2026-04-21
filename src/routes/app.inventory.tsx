@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Package, Plus, Pencil, Trash2, AlertTriangle, Boxes } from "lucide-react";
+import { Package, Plus, Pencil, Trash2, AlertTriangle, Boxes, Upload } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { EmptyState } from "@/components/EmptyState";
+import { InventoryImport } from "@/components/InventoryImport";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,6 +51,7 @@ function InventoryPage() {
   const [form, setForm] = useState<FormState>(empty);
   const [errors, setErrors] = useState<FieldErrors<FormState>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
   const load = async () => {
     const [i, p] = await Promise.all([
@@ -124,8 +126,18 @@ function InventoryPage() {
     <AppShell
       title="Inventory"
       subtitle={`${items.length} items tracked · ${items.filter(i => i.is_hazmat).length} hazmat`}
-      actions={canCreate ? <Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button> : undefined}
+      actions={
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setImportOpen(true)}>
+            <Upload className="h-4 w-4 mr-1.5" /> Import
+          </Button>
+          {canCreate && (
+            <Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button>
+          )}
+        </div>
+      }
     >
+      <InventoryImport open={importOpen} onOpenChange={setImportOpen} />
       {loading ? (
         <div className="text-sm text-muted-foreground">Loading…</div>
       ) : items.length === 0 ? (
