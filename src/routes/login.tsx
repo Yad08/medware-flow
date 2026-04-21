@@ -91,16 +91,8 @@ function LoginPage() {
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold tracking-tight">Sign in to MedWare</h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              Enter your 4–6 digit PIN to continue.
+              Enter your access PIN to continue.
             </p>
-            <div className="mt-4 flex justify-center gap-2 text-xs">
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-soft text-primary border border-primary/15">
-                <Briefcase className="h-3 w-3" /> Employee
-              </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-muted text-muted-foreground border border-border">
-                <Users className="h-3 w-3" /> Volunteer
-              </span>
-            </div>
           </div>
 
           <form
