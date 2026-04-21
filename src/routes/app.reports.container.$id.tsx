@@ -45,7 +45,7 @@ function ContainerReport() {
     <div className="min-h-screen flex items-center justify-center p-8">
       <div className="text-center space-y-3">
         <p className="text-sm text-muted-foreground">Container not found or still loading…</p>
-        <Button asChild variant="outline" size="sm"><Link to="/reports"><ArrowLeft className="h-4 w-4 mr-1.5" />Back to reports</Link></Button>
+        <Button asChild variant="outline" size="sm"><Link to="/app/reports"><ArrowLeft className="h-4 w-4 mr-1.5" />Back to reports</Link></Button>
       </div>
     </div>
   );
@@ -58,7 +58,7 @@ function ContainerReport() {
     <div className="min-h-screen bg-background py-8 px-4 print-page">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6 no-print">
-          <Button asChild variant="ghost" size="sm"><Link to="/reports"><ArrowLeft className="h-4 w-4 mr-1.5" />Back</Link></Button>
+          <Button asChild variant="ghost" size="sm"><Link to="/app/reports"><ArrowLeft className="h-4 w-4 mr-1.5" />Back</Link></Button>
           <Button onClick={() => window.print()}><Printer className="h-4 w-4 mr-1.5" />Print</Button>
         </div>
 
