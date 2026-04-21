@@ -150,6 +150,16 @@
 }
 
 @media print {
+  @page { margin: 14mm; }
   .no-print { display: none !important; }
-  body { background: white; }
+  html, body { background: white !important; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .print-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .print-page { padding: 0 !important; }
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; page-break-after: auto; }
 }
