@@ -6,12 +6,13 @@ import { EmptyState } from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { supabase, type Item, type Pallet } from "@/lib/db";
 import { toast } from "sonner";
+import { itemSchema, flattenErrors, type FieldErrors } from "@/lib/validation";
 
 export const Route = createFileRoute("/inventory")({
   head: () => ({
@@ -41,9 +42,10 @@ function InventoryPage() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<FormState>(empty);
+  const [errors, setErrors] = useState<FieldErrors<FormState>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   const load = async () => {
-    setLoading(true);
     const [i, p] = await Promise.all([
       supabase.from("items").select("*").order("created_at", { ascending: false }),
       supabase.from("pallets").select("*").order("created_at", { ascending: false }),
@@ -54,44 +56,49 @@ function InventoryPage() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    const ch = supabase
+      .channel("inventory-items")
+      .on("postgres_changes", { event: "*", schema: "public", table: "items" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "pallets" }, () => load())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, []);
 
   const palletName = (id: string | null) => pallets.find((p) => p.id === id)?.name ?? "—";
 
   const onSubmit = async () => {
-    if (!form.name.trim()) return toast.error("Name is required");
-    if (form.quantity < 1) return toast.error("Quantity must be at least 1");
-    if (form.weight < 0) return toast.error("Weight cannot be negative");
-
-    const payload = {
-      name: form.name.trim(),
-      type: form.type,
-      quantity: form.quantity,
-      weight: form.weight,
-      is_hazmat: form.is_hazmat,
-      pallet_id: form.pallet_id,
-    };
-
+    const parsed = itemSchema.safeParse(form);
+    if (!parsed.success) {
+      setErrors(flattenErrors<FormState>(parsed.error));
+      toast.error("Please fix the highlighted fields");
+      return;
+    }
+    setErrors({});
+    setSubmitting(true);
+    const payload = parsed.data;
     const res = form.id
       ? await supabase.from("items").update(payload).eq("id", form.id)
       : await supabase.from("items").insert(payload);
-
+    setSubmitting(false);
     if (res.error) return toast.error(res.error.message);
-    toast.success(form.id ? "Item updated" : "Item added");
+    toast.success(form.id ? "Item updated" : "Item added", {
+      description: `${payload.name} · ${payload.quantity} × ${payload.weight} kg`,
+    });
     setOpen(false);
     setForm(empty);
-    load();
   };
 
-  const onDelete = async (id: string) => {
-    if (!confirm("Delete this item?")) return;
+  const onDelete = async (id: string, name: string) => {
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
     const { error } = await supabase.from("items").delete().eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Item deleted");
-    load();
   };
 
   const onEdit = (item: Item) => {
+    setErrors({});
     setForm({
       id: item.id,
       name: item.name,
@@ -104,15 +111,13 @@ function InventoryPage() {
     setOpen(true);
   };
 
+  const openCreate = () => { setErrors({}); setForm(empty); setOpen(true); };
+
   return (
     <AppShell
       title="Inventory"
-      subtitle={`${items.length} items tracked`}
-      actions={
-        <Button onClick={() => { setForm(empty); setOpen(true); }}>
-          <Plus className="h-4 w-4 mr-1.5" /> Add Item
-        </Button>
-      }
+      subtitle={`${items.length} items tracked · ${items.filter(i => i.is_hazmat).length} hazmat`}
+      actions={<Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button>}
     >
       {loading ? (
         <div className="text-sm text-muted-foreground">Loading…</div>
@@ -121,7 +126,7 @@ function InventoryPage() {
           icon={Package}
           title="No inventory yet"
           description="Add your first medical supply item to start building pallets and shipments."
-          action={<Button onClick={() => setOpen(true)}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button>}
+          action={<Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button>}
         />
       ) : (
         <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
@@ -154,15 +159,15 @@ function InventoryPage() {
                     </td>
                     <td className="px-4 py-3">
                       {item.is_hazmat && (
-                        <Badge variant="outline" className="border-warning/40 text-warning-foreground bg-warning/10">
+                        <Badge variant="outline" className="border-warning/50 text-warning-foreground bg-warning/15">
                           <AlertTriangle className="h-3 w-3 mr-1" /> Hazmat
                         </Badge>
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="inline-flex gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => onEdit(item)}><Pencil className="h-4 w-4" /></Button>
-                        <Button variant="ghost" size="icon" onClick={() => onDelete(item.id)}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => onEdit(item)} aria-label="Edit"><Pencil className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" onClick={() => onDelete(item.id, item.name)} aria-label="Delete"><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </td>
                   </tr>
@@ -177,15 +182,14 @@ function InventoryPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{form.id ? "Edit Item" : "Add Item"}</DialogTitle>
+            <DialogDescription>Track a medical supply item with its quantity, weight and handling flags.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <div className="space-y-1.5">
-              <Label>Item name</Label>
-              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Surgical Gloves" />
-            </div>
+            <Field label="Item name" required error={errors.name}>
+              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Surgical Gloves" aria-invalid={!!errors.name} />
+            </Field>
             <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label>Type</Label>
+              <Field label="Type" required>
                 <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v as "box" | "unit" })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -193,19 +197,16 @@ function InventoryPage() {
                     <SelectItem value="unit">Unit</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label>Quantity</Label>
-                <Input type="number" min={1} value={form.quantity} onChange={(e) => setForm({ ...form, quantity: parseInt(e.target.value) || 0 })} />
-              </div>
+              </Field>
+              <Field label="Quantity" required error={errors.quantity}>
+                <Input type="number" min={1} value={form.quantity} onChange={(e) => setForm({ ...form, quantity: parseInt(e.target.value) || 0 })} aria-invalid={!!errors.quantity} />
+              </Field>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label>Weight per unit (kg)</Label>
-                <Input type="number" step="0.01" min={0} value={form.weight} onChange={(e) => setForm({ ...form, weight: parseFloat(e.target.value) || 0 })} />
-              </div>
-              <div className="space-y-1.5">
-                <Label>Pallet</Label>
+              <Field label="Weight per unit (kg)" required error={errors.weight}>
+                <Input type="number" step="0.01" min={0} value={form.weight} onChange={(e) => setForm({ ...form, weight: parseFloat(e.target.value) || 0 })} aria-invalid={!!errors.weight} />
+              </Field>
+              <Field label="Pallet">
                 <Select value={form.pallet_id ?? "none"} onValueChange={(v) => setForm({ ...form, pallet_id: v === "none" ? null : v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -213,7 +214,7 @@ function InventoryPage() {
                     {pallets.map((p) => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              </div>
+              </Field>
             </div>
             <div className="flex items-center justify-between rounded-lg border border-border p-3">
               <div>
@@ -225,10 +226,20 @@ function InventoryPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={onSubmit}>{form.id ? "Save changes" : "Add item"}</Button>
+            <Button onClick={onSubmit} disabled={submitting}>{submitting ? "Saving…" : form.id ? "Save changes" : "Add item"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </AppShell>
+  );
+}
+
+function Field({ label, required, error, children }: { label: string; required?: boolean; error?: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1.5">
+      <Label>{label}{required && <span className="text-destructive ml-0.5">*</span>}</Label>
+      {children}
+      {error && <p className="text-xs text-destructive">{error}</p>}
+    </div>
   );
 }
