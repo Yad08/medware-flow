@@ -126,8 +126,18 @@ function InventoryPage() {
     <AppShell
       title="Inventory"
       subtitle={`${items.length} items tracked · ${items.filter(i => i.is_hazmat).length} hazmat`}
-      actions={canCreate ? <Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button> : undefined}
+      actions={
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setImportOpen(true)}>
+            <Upload className="h-4 w-4 mr-1.5" /> Import
+          </Button>
+          {canCreate && (
+            <Button onClick={openCreate}><Plus className="h-4 w-4 mr-1.5" /> Add Item</Button>
+          )}
+        </div>
+      }
     >
+      <InventoryImport open={importOpen} onOpenChange={setImportOpen} />
       {loading ? (
         <div className="text-sm text-muted-foreground">Loading…</div>
       ) : items.length === 0 ? (
