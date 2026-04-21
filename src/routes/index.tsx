@@ -25,7 +25,7 @@ type Stats = {
   hazmatCount: number;
 };
 
-type Activity = { id: string; label: string; type: string; at: string };
+type RecentActivity = { id: string; label: string; type: string; at: string };
 
 function Dashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
