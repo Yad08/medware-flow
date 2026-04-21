@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Package, Plus, Pencil, Trash2, AlertTriangle, Boxes } from "lucide-react";
+import { Package, Plus, Pencil, Trash2, AlertTriangle, Boxes, Upload } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { EmptyState } from "@/components/EmptyState";
+import { InventoryImport } from "@/components/InventoryImport";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
