@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Boxes, ArrowLeft, Briefcase, Users, Delete } from "lucide-react";
+import { Boxes, ArrowLeft, Delete } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
@@ -91,16 +91,8 @@ function LoginPage() {
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold tracking-tight">Sign in to MedWare</h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              Enter your 4–6 digit PIN to continue.
+              Enter your access PIN to continue.
             </p>
-            <div className="mt-4 flex justify-center gap-2 text-xs">
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-soft text-primary border border-primary/15">
-                <Briefcase className="h-3 w-3" /> Employee
-              </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-muted text-muted-foreground border border-border">
-                <Users className="h-3 w-3" /> Volunteer
-              </span>
-            </div>
           </div>
 
           <form
@@ -173,7 +165,7 @@ function LoginPage() {
               disabled={submitting || pin.length < 4}
               className="mt-5 w-full h-12 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors disabled:opacity-60"
             >
-              {submitting ? "Verifying…" : "Sign in"}
+              {submitting ? "Verifying…" : "Enter System"}
             </button>
 
             {/* Hidden input for keyboard accessibility */}
@@ -192,11 +184,6 @@ function LoginPage() {
               aria-label="PIN"
             />
           </form>
-
-          <p className="text-xs text-muted-foreground text-center mt-5">
-            Demo PINs · Employee <span className="font-mono text-foreground">1234</span> ·
-            Volunteer <span className="font-mono text-foreground">1111</span>
-          </p>
         </div>
       </main>
     </div>
