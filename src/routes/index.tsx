@@ -14,9 +14,10 @@ import {
   LogIn,
   Users,
 } from "lucide-react";
-import heroImg from "@/assets/hero-volunteers.jpg";
-import containerImg from "@/assets/shipping-container.jpg";
-import sortingImg from "@/assets/sorting-supplies.jpg";
+import heroImg from "@/assets/medware-pallets-loaded.jpg";
+import containerImg from "@/assets/medware-container-loading.jpg";
+import sortingImg from "@/assets/medware-volunteers-loading.jpg";
+import equipmentImg from "@/assets/medware-equipment-van.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -125,12 +126,12 @@ function Hero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="relative"
         >
-          <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-elevated">
+          <div className="aspect-[4/5] sm:aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-elevated bg-primary-soft/40 ring-1 ring-primary/10">
             <img
               src={heroImg}
-              alt="Volunteers organizing medical supply boxes onto pallets in a warehouse"
-              width={1536}
-              height={1024}
+              alt="Shipping container fully loaded with pallets of donated medical supplies, decorated with handmade thank-you posters bound for Malawi"
+              width={1500}
+              height={2000}
               className="w-full h-full object-cover"
             />
           </div>
@@ -173,13 +174,13 @@ function StatsBar() {
 function About() {
   return (
     <section id="about" className="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-12 items-center">
-      <div className="aspect-[5/4] rounded-2xl overflow-hidden border border-border shadow-card order-2 lg:order-1">
+      <div className="aspect-[5/4] rounded-2xl overflow-hidden border border-border shadow-card bg-primary-soft/40 ring-1 ring-primary/10 order-2 lg:order-1">
         <img
           src={sortingImg}
-          alt="Gloved hands sorting medical supplies into a labeled box"
+          alt="Volunteers loading a wrapped pallet of donated hospital equipment into a shipping container"
           loading="lazy"
           width={1280}
-          height={896}
+          height={1024}
           className="w-full h-full object-cover"
         />
       </div>
@@ -235,13 +236,13 @@ function WhyBuilt() {
             ))}
           </ul>
         </div>
-        <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-elevated">
+        <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-elevated bg-primary-soft/40 ring-1 ring-primary/10">
           <img
             src={containerImg}
-            alt="Shipping container loaded with neatly stacked pallets of medical supply boxes"
+            alt="Volunteers in Malawi unloading a shipping container of donated medical supplies from a delivery truck"
             loading="lazy"
-            width={1280}
-            height={896}
+            width={1920}
+            height={1440}
             className="w-full h-full object-cover"
           />
         </div>
@@ -296,37 +297,58 @@ function Features() {
 function Volunteers() {
   return (
     <section id="volunteers" className="bg-card border-y border-border">
-      <div className="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-5 gap-12 items-center">
-        <div className="lg:col-span-2">
-          <div className="text-xs uppercase tracking-wider text-primary font-semibold">Volunteer-powered</div>
-          <h2 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">
-            None of this happens without volunteers.
-          </h2>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            MSNI’s warehouse runs on volunteer time. From sorting incoming donations to building
-            pallets, volunteers are at the center of every shipment. MedWare gives them simple,
-            focused tools to contribute confidently — without the overhead of paperwork.
-          </p>
-          <Link
-            to="/login"
-            className="mt-6 inline-flex items-center gap-2 px-5 h-11 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-          >
-            <Users className="h-4 w-4" />
-            Volunteer Login
-          </Link>
+      <div className="max-w-7xl mx-auto px-6 py-20">
+        <div className="grid lg:grid-cols-5 gap-12 items-center">
+          <div className="lg:col-span-2">
+            <div className="text-xs uppercase tracking-wider text-primary font-semibold">Volunteer-powered</div>
+            <h2 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">
+              None of this happens without volunteers.
+            </h2>
+            <p className="mt-4 text-muted-foreground leading-relaxed">
+              MSNI’s warehouse runs on volunteer time. From sorting incoming donations to building
+              pallets, volunteers are at the center of every shipment. MedWare gives them simple,
+              focused tools to contribute confidently — without the overhead of paperwork.
+            </p>
+            <Link
+              to="/login"
+              className="mt-6 inline-flex items-center gap-2 px-5 h-11 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+            >
+              <Users className="h-4 w-4" />
+              Volunteer Login
+            </Link>
+          </div>
+          <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4">
+            {[
+              { title: "Add inventory", desc: "Log what comes in the door, with weight and type." },
+              { title: "Assign to pallets", desc: "Help group items so they’re shipment-ready." },
+              { title: "View shipments", desc: "See what’s being prepared and what’s already gone." },
+              { title: "Read reports", desc: "Browse pallet and container manifests anytime." },
+            ].map((c) => (
+              <div key={c.title} className="rounded-xl border border-border bg-background p-5 hover:border-primary/30 hover:shadow-card transition-all">
+                <div className="font-semibold">{c.title}</div>
+                <p className="text-sm text-muted-foreground mt-1">{c.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4">
-          {[
-            { title: "Add inventory", desc: "Log what comes in the door, with weight and type." },
-            { title: "Assign to pallets", desc: "Help group items so they’re shipment-ready." },
-            { title: "View shipments", desc: "See what’s being prepared and what’s already gone." },
-            { title: "Read reports", desc: "Browse pallet and container manifests anytime." },
-          ].map((c) => (
-            <div key={c.title} className="rounded-xl border border-border bg-background p-5">
-              <div className="font-semibold">{c.title}</div>
-              <p className="text-sm text-muted-foreground mt-1">{c.desc}</p>
+        <div className="mt-12 relative rounded-2xl overflow-hidden border border-border shadow-elevated bg-primary-soft/40 ring-1 ring-primary/10">
+          <div className="aspect-[16/9] sm:aspect-[21/9]">
+            <img
+              src={equipmentImg}
+              alt="Hospital beds, stretchers, and donated medical equipment loaded into a delivery van for transport to the warehouse"
+              loading="lazy"
+              width={1500}
+              height={2000}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+            <div className="text-xs uppercase tracking-wider font-semibold opacity-90">Donated equipment in motion</div>
+            <div className="mt-1 text-lg md:text-2xl font-semibold max-w-2xl">
+              Hospital beds, stretchers, and supplies — collected, catalogued, and routed where they’re needed.
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
