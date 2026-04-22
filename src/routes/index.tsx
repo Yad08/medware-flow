@@ -14,9 +14,10 @@ import {
   LogIn,
   Users,
 } from "lucide-react";
-import heroImg from "@/assets/hero-volunteers.jpg";
-import containerImg from "@/assets/shipping-container.jpg";
-import sortingImg from "@/assets/sorting-supplies.jpg";
+import heroImg from "@/assets/medware-pallets-loaded.jpg";
+import containerImg from "@/assets/medware-container-loading.jpg";
+import sortingImg from "@/assets/medware-volunteers-loading.jpg";
+import equipmentImg from "@/assets/medware-equipment-van.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
