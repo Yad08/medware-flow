@@ -297,37 +297,58 @@ function Features() {
 function Volunteers() {
   return (
     <section id="volunteers" className="bg-card border-y border-border">
-      <div className="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-5 gap-12 items-center">
-        <div className="lg:col-span-2">
-          <div className="text-xs uppercase tracking-wider text-primary font-semibold">Volunteer-powered</div>
-          <h2 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">
-            None of this happens without volunteers.
-          </h2>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            MSNI’s warehouse runs on volunteer time. From sorting incoming donations to building
-            pallets, volunteers are at the center of every shipment. MedWare gives them simple,
-            focused tools to contribute confidently — without the overhead of paperwork.
-          </p>
-          <Link
-            to="/login"
-            className="mt-6 inline-flex items-center gap-2 px-5 h-11 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-          >
-            <Users className="h-4 w-4" />
-            Volunteer Login
-          </Link>
+      <div className="max-w-7xl mx-auto px-6 py-20">
+        <div className="grid lg:grid-cols-5 gap-12 items-center">
+          <div className="lg:col-span-2">
+            <div className="text-xs uppercase tracking-wider text-primary font-semibold">Volunteer-powered</div>
+            <h2 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">
+              None of this happens without volunteers.
+            </h2>
+            <p className="mt-4 text-muted-foreground leading-relaxed">
+              MSNI’s warehouse runs on volunteer time. From sorting incoming donations to building
+              pallets, volunteers are at the center of every shipment. MedWare gives them simple,
+              focused tools to contribute confidently — without the overhead of paperwork.
+            </p>
+            <Link
+              to="/login"
+              className="mt-6 inline-flex items-center gap-2 px-5 h-11 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+            >
+              <Users className="h-4 w-4" />
+              Volunteer Login
+            </Link>
+          </div>
+          <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4">
+            {[
+              { title: "Add inventory", desc: "Log what comes in the door, with weight and type." },
+              { title: "Assign to pallets", desc: "Help group items so they’re shipment-ready." },
+              { title: "View shipments", desc: "See what’s being prepared and what’s already gone." },
+              { title: "Read reports", desc: "Browse pallet and container manifests anytime." },
+            ].map((c) => (
+              <div key={c.title} className="rounded-xl border border-border bg-background p-5 hover:border-primary/30 hover:shadow-card transition-all">
+                <div className="font-semibold">{c.title}</div>
+                <p className="text-sm text-muted-foreground mt-1">{c.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4">
-          {[
-            { title: "Add inventory", desc: "Log what comes in the door, with weight and type." },
-            { title: "Assign to pallets", desc: "Help group items so they’re shipment-ready." },
-            { title: "View shipments", desc: "See what’s being prepared and what’s already gone." },
-            { title: "Read reports", desc: "Browse pallet and container manifests anytime." },
-          ].map((c) => (
-            <div key={c.title} className="rounded-xl border border-border bg-background p-5">
-              <div className="font-semibold">{c.title}</div>
-              <p className="text-sm text-muted-foreground mt-1">{c.desc}</p>
+        <div className="mt-12 relative rounded-2xl overflow-hidden border border-border shadow-elevated bg-primary-soft/40 ring-1 ring-primary/10">
+          <div className="aspect-[16/9] sm:aspect-[21/9]">
+            <img
+              src={equipmentImg}
+              alt="Hospital beds, stretchers, and donated medical equipment loaded into a delivery van for transport to the warehouse"
+              loading="lazy"
+              width={1500}
+              height={2000}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
+            <div className="text-xs uppercase tracking-wider font-semibold opacity-90">Donated equipment in motion</div>
+            <div className="mt-1 text-lg md:text-2xl font-semibold max-w-2xl">
+              Hospital beds, stretchers, and supplies — collected, catalogued, and routed where they’re needed.
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
