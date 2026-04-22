@@ -126,12 +126,12 @@ function Hero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="relative"
         >
-          <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-elevated">
+          <div className="aspect-[4/5] sm:aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-elevated bg-primary-soft/40 ring-1 ring-primary/10">
             <img
               src={heroImg}
-              alt="Volunteers organizing medical supply boxes onto pallets in a warehouse"
-              width={1536}
-              height={1024}
+              alt="Shipping container fully loaded with pallets of donated medical supplies, decorated with handmade thank-you posters bound for Malawi"
+              width={1500}
+              height={2000}
               className="w-full h-full object-cover"
             />
           </div>
@@ -174,13 +174,13 @@ function StatsBar() {
 function About() {
   return (
     <section id="about" className="max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-12 items-center">
-      <div className="aspect-[5/4] rounded-2xl overflow-hidden border border-border shadow-card order-2 lg:order-1">
+      <div className="aspect-[5/4] rounded-2xl overflow-hidden border border-border shadow-card bg-primary-soft/40 ring-1 ring-primary/10 order-2 lg:order-1">
         <img
           src={sortingImg}
-          alt="Gloved hands sorting medical supplies into a labeled box"
+          alt="Volunteers loading a wrapped pallet of donated hospital equipment into a shipping container"
           loading="lazy"
           width={1280}
-          height={896}
+          height={1024}
           className="w-full h-full object-cover"
         />
       </div>
@@ -236,13 +236,13 @@ function WhyBuilt() {
             ))}
           </ul>
         </div>
-        <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-elevated">
+        <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-elevated bg-primary-soft/40 ring-1 ring-primary/10">
           <img
             src={containerImg}
-            alt="Shipping container loaded with neatly stacked pallets of medical supply boxes"
+            alt="Volunteers in Malawi unloading a shipping container of donated medical supplies from a delivery truck"
             loading="lazy"
-            width={1280}
-            height={896}
+            width={1920}
+            height={1440}
             className="w-full h-full object-cover"
           />
         </div>
