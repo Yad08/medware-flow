@@ -34,12 +34,14 @@ export const Route = createRootRoute({
       { title: "MedWare Logistics — Medical Supplies Network Inc." },
       { name: "description", content: "Digital inventory and shipment management for MSNI's nonprofit medical supply warehouse." },
       { name: "author", content: "MedWare Logistics" },
-      { property: "og:title", content: "MedWare Logistics" },
-      { property: "og:description", content: "Inventory and shipment management for humanitarian medical supply distribution." },
+      { property: "og:title", content: "MedWare Logistics — Medical Supplies Network Inc." },
+      { property: "og:description", content: "Digital inventory and shipment management for MSNI's nonprofit medical supply warehouse." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "MedWare Logistics" },
-      { name: "twitter:description", content: "Inventory and shipment management for humanitarian medical supply distribution." },
+      { name: "twitter:title", content: "MedWare Logistics — Medical Supplies Network Inc." },
+      { name: "twitter:description", content: "Digital inventory and shipment management for MSNI's nonprofit medical supply warehouse." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/cb68d29e-1705-489d-a95c-def580bf44e7" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/cb68d29e-1705-489d-a95c-def580bf44e7" },
     ],
     links: [
       {
